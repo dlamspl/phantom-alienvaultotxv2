@@ -1,0 +1,13 @@
+Added Ingest limits for containers and artifacts for both config and dynamic parms
+More robust ingest logic
+Fixed bug for cef mapping from name to the correct type so Phantom can identify it
+Removed some artifact types and allow only specific types to be ingested (see Readme)
+Added OTXv2 summary function
+Added ip reputation, domain lookup, url and hash support
+Cleaned up init and restructured code
+Fixed widget tables to show meaningful data
+Fixed proper error codes based on results
+Added some documentation
+
+
+

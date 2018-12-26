@@ -1,0 +1,373 @@
+{
+    "appid": "c939c73f-cb0a-478e-9e47-148d982495db",
+    "name": "Alienvault OTXv2",
+    "description": "Open Threat Exchange is the neighborhood watch of the global intelligence community. It enables private companies, independent security researchers, and government agencies to openly collaborate and share the latest information about emerging threats, attack methods, and malicious actors, promoting greater security across the entire community",
+    "type": "reputation",
+    "product_vendor": "Alienvault",
+    "logo": "alienvaultotxv2.png",
+    "logo_dark": "alienvaultotxv2_dark.png",
+    "product_name": "Alienvault OTXv2",
+    "product_version_regex": ".*",
+    "publisher": "Phantom",
+    "license": "Copyright (c) Phantom, 2018",
+    "app_version": "1.0.3",
+    "utctime_updated": "2018-10-17T09:49:34.692494Z",
+    "package_name": "phantom_alienvaultotxv2",
+    "main_module": "alienvaultotxv2_connector.py",
+    "min_phantom_version": "3.5.0",
+    "app_wizard_version": "1.0.0",
+    "configuration": {
+        "api_key": {
+            "description": "Alienvault OTX API key",
+            "data_type": "password",
+            "required": true,
+            "value_list": [],
+            "default": "",
+            "order": 0
+        },
+        "base_url": {
+            "description": "The OTX API Base URL to connect to",
+            "data_type": "string",
+            "required": true,
+            "value_list": [],
+            "default": "https://otx.alienvault.com",
+            "order": 1
+        },
+        "container_count": {
+          "required": false,
+          "description": "Maximum number of container records to create.",
+          "data_type": "numeric",
+          "value_list": [],
+          "primary": false,
+          "default": 10,
+          "order": 2
+        },
+        "start_time": {
+          "required": false,
+          "description": "Start time for the initial poll (days ago)[Not Implemented-> Default 1 day]",
+          "data_type": "numeric",
+          "value_list": [],
+          "contains": [],
+          "primary": false,
+          "default": 1,
+          "order": 3
+        },
+        "artifact_count": {
+          "required": true,
+          "description": "Maximum number of artifact records to store",
+          "data_type": "numeric",
+          "value_list": [],
+          "contains": [],
+          "primary": false,
+          "default": 10,
+          "order": 4
+        }
+
+    },
+    "actions": [
+        {
+            "action": "test connectivity",
+            "identifier": "test_connectivity",
+            "description": "Validate the asset configuration for connectivity using supplied configuration",
+            "verbose": "Test connectivity to the base URL",
+            "type": "test",
+            "read_only": true,
+            "parameters": {
+
+            },
+            "output": [],
+            "versions": "EQ(*)"
+        },
+        {
+              "read_only": true,
+              "description": "Callback action for the on_poll ingest functionality",
+              "parameters": {
+                        "container_count": {
+                          "required": false,
+                          "description": "Maximum number of container records to create.",
+                          "data_type": "numeric",
+                          "value_list": [],
+                          "primary": false,
+                          "default": 10,
+                          "order": 0
+                        },
+
+                        "artifact_count": {
+                          "required": true,
+                          "description": "Maximum number of artifact records to store",
+                          "data_type": "numeric",
+                          "value_list": [],
+                          "contains": [],
+                          "primary": false,
+                          "default": 10,
+                          "order": 1
+                        }
+              },
+              "versions": "EQ(*)",
+              "action": "on poll",
+              "output": [],
+              "identifier": "on_poll",
+              "type": "ingest",
+              "verbose": ""
+        },
+        {
+            "action": "domain reputation",
+            "identifier": "domain_reputation",
+            "description": "Queries domain info",
+            "verbose": "",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "domain": {
+                    "description": "Domain to query",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "domain",
+                        "url"
+                    ],
+                    "value_list": [],
+                    "default": "",
+                    "order": 0
+                },
+                "section": {
+                    "description": "OTX query type",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": false,
+                    "contains": [],
+                    "value_list": [
+                        "general",
+                        "geo",
+                        "malware",
+                        "url_list",
+                        "passive_dns",
+                        "whois",
+                        "http_scans"
+                    ],
+                    "default": "general",
+                    "order": 1
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.domain",
+                    "data_type": "string",
+                    "contains": [
+                        "domain",
+                        "url"
+                    ],
+                    "column_name": "domain",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.summary.found",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "found",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.summary.pulse_0_name",
+                    "data_type": "string",
+                    "column_name": "name",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "status",
+                    "column_order": 3
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "ip reputation",
+            "identifier": "ip_reputation",
+            "description": "Queries IP info",
+            "verbose": "",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "ip": {
+                    "description": "IP to query",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "ip"
+                    ],
+                    "value_list": [],
+                    "default": "",
+                    "order": 0
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.ip",
+                    "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ],
+                    "column_name": "ip",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.summary.found",
+                    "data_type": "string",
+                    "column_name": "found",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.summary.pulse_0_name",
+                    "data_type": "string",
+                    "column_name": "Name",
+                    "column_order": 2
+                },
+                                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "status",
+                    "column_order": 3
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "file reputation",
+            "identifier": "file_reputation",
+            "description": "Queries for file reputation info",
+            "verbose": "",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "hash": {
+                    "description": "File hash to query",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "hash",
+                        "sha256",
+                        "sha1",
+                        "md5"
+                    ],
+                    "value_list": [],
+                    "default": "",
+                    "order": 0
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.hash",
+                    "data_type": "string",
+                    "contains": [
+                        "hash",
+                        "sha256",
+                        "sha1",
+                        "md5"
+                    ],
+                    "column_name": "hash",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.summary.found",
+                    "data_type": "string",
+                    "column_name": "found",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.summary.pulse_0_name",
+                    "data_type": "string",
+                    "column_name": "Name",
+                    "column_order": 2
+                },
+                                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "status",
+                    "column_order": 3
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "url reputation",
+            "identifier": "url_reputation",
+            "description": "Queries URL info",
+            "verbose": "",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "url": {
+                    "description": "URL to query",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "url"
+                    ],
+                    "value_list": [],
+                    "default": "",
+                    "order": 0
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.url",
+                    "data_type": "string",
+                    "contains": [
+                        "url"
+                    ],
+                    "column_name": "url",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.summary.found",
+                    "data_type": "string",
+                    "column_name": "found",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.summary.pulse_0_name",
+                    "data_type": "string",
+                    "column_name": "Name",
+                    "column_order": 2
+                },
+                                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "status",
+                    "column_order": 3
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        }
+    ]
+}

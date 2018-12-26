@@ -1,0 +1,21 @@
+<html><head></head><body>The app provides two main features.
+<ul>
+    <li>It can be used ad-hoc or in playbooks to query OTX for URL, IP and hash reputation.</li>
+    <li>Can be used as ingest source. In this case it will retrieve the last 24 hours new pulses and extract relevant artifacts</li>
+
+</ul>
+In the case where it is used as ingest source the following artifacts are extracted/supported currently. These are OTXv2
+specific names and are transformed to the appropriate CEF name and type for phantom.
+<ul>
+<li>FileHash-MD5
+<li>FileHash-SHA256
+<li>FileHash-SHA1
+<li>domain
+<li>IPv4
+<li>URL
+<li>hostname
+<li>email
+<li>CIDR
+</ul>
+
+</body></html>
